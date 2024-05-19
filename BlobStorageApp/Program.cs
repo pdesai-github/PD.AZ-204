@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using System.Reflection;
 using System.Text;
 
 namespace BlobStorageApp
@@ -22,7 +23,44 @@ namespace BlobStorageApp
             await ListAllContainersAndBlobs(blobServiceClient);
             await DownloadAllBlobs(blobServiceClient);
             await DeleteBlobAndContainer(imageContainerName, blobServiceClient);
+            await GetBlobProperties(fileContainerName, blobServiceClient);
+            await SetBlobMetadata(fileContainerName, blobServiceClient);
+            await GetBlobMetadata(fileContainerName, blobServiceClient);
+        }
 
+        private static async Task GetBlobMetadata(string fileContainerName, BlobServiceClient blobServiceClient)
+        {
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(fileContainerName);
+            BlobClient blobClient = blobContainerClient.GetBlobClient("Resume.txt");
+            BlobProperties blobProperties = await blobClient.GetPropertiesAsync();
+            IDictionary<string, string> metadata = blobProperties.Metadata;
+            foreach (var item in metadata.Keys)
+            {
+                Console.WriteLine($"Key : {item} Value : {metadata[item]}");
+            }
+        }
+
+        private static async Task SetBlobMetadata(string fileContainerName, BlobServiceClient blobServiceClient)
+        {
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(fileContainerName);
+            BlobClient blobClient = blobContainerClient.GetBlobClient("Resume.txt");
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
+            metadata.Add("Position", "Software architect");
+            metadata.Add("Gender", "Male");
+            await blobClient.SetMetadataAsync(metadata);
+            Console.WriteLine("Metadata added");
+        }
+
+        private static async Task GetBlobProperties(string fileContainerName, BlobServiceClient blobServiceClient)
+        {
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(fileContainerName);
+            BlobClient blobClient = blobContainerClient.GetBlobClient("Resume.txt");
+            BlobProperties blobProperties = await blobClient.GetPropertiesAsync();
+            PropertyInfo[] properties = blobProperties.GetType().GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                Console.WriteLine($"Name : {property.Name} Value : {property.GetValue(blobProperties, null)}");
+            }
         }
 
         private static async Task DeleteBlobAndContainer(string imageContainerName, BlobServiceClient blobServiceClient)
