@@ -29,9 +29,9 @@ namespace BlobStorageApp
         {
             BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(imageContainerName);
             BlobClient blobClient = blobContainerClient.GetBlobClient("bike.jpg");
-            await blobClient.DeleteAsync();
+            await blobClient.DeleteIfExistsAsync();
             Console.WriteLine("Blob deleted");
-            await blobContainerClient.DeleteAsync();
+            await blobContainerClient.DeleteIfExistsAsync();
             Console.WriteLine("Container deleted");
         }
 
