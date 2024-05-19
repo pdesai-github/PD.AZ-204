@@ -8,7 +8,7 @@ namespace BlobStorageApp
     {
         static async Task Main(string[] args)
         {
-            const string storageAccountConnStr = "{CONNECTION_STRING}";
+            const string storageAccountConnStr = "{CON_STR}";
             const string imageContainerName = "imagecontainer";
             const string fileContainerName = "filecontainer";
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -16,10 +16,43 @@ namespace BlobStorageApp
             /* Used for storage account level tasks like get Containres */
             BlobServiceClient blobServiceClient = new BlobServiceClient(storageAccountConnStr);
 
-            //await UploadAndListImageBlobs(imageContainerName, currentDirectory, blobServiceClient);
-            //await UploadAndListFileBlobs(fileContainerName, currentDirectory, blobServiceClient);
-            //await UpdateTextBlob(fileContainerName, blobServiceClient,"New content");
+            await UploadAndListImageBlobs(imageContainerName, currentDirectory, blobServiceClient);
+            await UploadAndListFileBlobs(fileContainerName, currentDirectory, blobServiceClient);
+            await UpdateTextBlob(fileContainerName, blobServiceClient, "New content");
+            await ListAllContainersAndBlobs(blobServiceClient);
+            await DownloadAllBlobs(blobServiceClient);
+        }
 
+        private static async Task DownloadAllBlobs(BlobServiceClient blobServiceClient)
+        {
+            Console.WriteLine("Downloading all blobs");
+            await foreach (BlobContainerItem containerItem in blobServiceClient.GetBlobContainersAsync())
+            {
+                BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(containerItem.Name);
+                await foreach (BlobItem blobItem in blobContainerClient.GetBlobsAsync())
+                {
+                    string downloadFilePath = Path.Combine(Environment.CurrentDirectory, "Downloads", blobItem.Name);
+                    Directory.CreateDirectory(Path.GetDirectoryName(downloadFilePath));
+
+                    BlobClient blobClient = blobContainerClient.GetBlobClient(blobItem.Name);
+                    await blobClient.DownloadToAsync(downloadFilePath);
+                }
+            }
+        }
+
+        private static async Task ListAllContainersAndBlobs(BlobServiceClient blobServiceClient)
+        {
+            await foreach (BlobContainerItem containerItem in blobServiceClient.GetBlobContainersAsync())
+            {
+                Console.WriteLine("Showing all the containers and blobs");
+                Console.WriteLine($"Container : {containerItem.Name}");
+
+                BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(containerItem.Name);
+                await foreach (BlobItem blobItem in blobContainerClient.GetBlobsAsync())
+                {
+                    Console.WriteLine($"--Blob : {blobItem.Name}");
+                }
+            }
         }
 
         private static async Task UpdateTextBlob(string fileContainerName, BlobServiceClient blobServiceClient, string newFileContent)
@@ -53,7 +86,6 @@ namespace BlobStorageApp
 
         private static async Task UploadAndListImageBlobs(string imageContainerName, string currentDirectory, BlobServiceClient blobServiceClient)
         {
-            /* Get Container client using Storage account service */
             BlobContainerClient imageContainerClient = blobServiceClient.GetBlobContainerClient(imageContainerName);
             await imageContainerClient.CreateIfNotExistsAsync();
 
