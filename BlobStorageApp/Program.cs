@@ -8,7 +8,7 @@ namespace BlobStorageApp
     {
         static async Task Main(string[] args)
         {
-            const string storageAccountConnStr = "{CON_STR}";
+            const string storageAccountConnStr = "{}";
             const string imageContainerName = "imagecontainer";
             const string fileContainerName = "filecontainer";
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -21,6 +21,18 @@ namespace BlobStorageApp
             await UpdateTextBlob(fileContainerName, blobServiceClient, "New content");
             await ListAllContainersAndBlobs(blobServiceClient);
             await DownloadAllBlobs(blobServiceClient);
+            await DeleteBlobAndContainer(imageContainerName, blobServiceClient);
+
+        }
+
+        private static async Task DeleteBlobAndContainer(string imageContainerName, BlobServiceClient blobServiceClient)
+        {
+            BlobContainerClient blobContainerClient = blobServiceClient.GetBlobContainerClient(imageContainerName);
+            BlobClient blobClient = blobContainerClient.GetBlobClient("bike.jpg");
+            await blobClient.DeleteAsync();
+            Console.WriteLine("Blob deleted");
+            await blobContainerClient.DeleteAsync();
+            Console.WriteLine("Container deleted");
         }
 
         private static async Task DownloadAllBlobs(BlobServiceClient blobServiceClient)
