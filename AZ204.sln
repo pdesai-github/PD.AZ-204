@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage_accounts", "Storage_accounts", "{0AA3E0EB-1F86-4616-909C-2F0A18049989}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlobStorageApp", "BlobStorageApp\BlobStorageApp.csproj", "{42C22A99-AE43-4BF7-888C-79B58A9A430B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlobStorageApp", "BlobStorageApp\BlobStorageApp.csproj", "{42C22A99-AE43-4BF7-888C-79B58A9A430B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVaultApp", "KeyVaultApp\KeyVaultApp.csproj", "{F6FB094F-CEA9-46AE-B2F8-2A5C8D471C09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{42C22A99-AE43-4BF7-888C-79B58A9A430B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42C22A99-AE43-4BF7-888C-79B58A9A430B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42C22A99-AE43-4BF7-888C-79B58A9A430B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6FB094F-CEA9-46AE-B2F8-2A5C8D471C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6FB094F-CEA9-46AE-B2F8-2A5C8D471C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6FB094F-CEA9-46AE-B2F8-2A5C8D471C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6FB094F-CEA9-46AE-B2F8-2A5C8D471C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
